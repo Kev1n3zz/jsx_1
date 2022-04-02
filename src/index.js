@@ -124,11 +124,11 @@ import ReactDOM from "react-dom";
 
 //Tododay3 列表和Key 使用Array.prototype.map()方法
 //map()方法的语法为：
- // var new_array = arr.map(function callback(currentValue[, index[, array]]) {
- // Return element for new_array 
- // }[, thisArg])
- //map()方法为原数组中的每个元素都按照顺序调用一次callback函数，callback每次函数执行后的返回值（包括undefined）组合起来形成一个新的数组。
- //callback只会在有值的索引上被调用。因此null和undefined在显示表现为‘【空】’的原因有两种：1.没有值 2.没有索引
+// var new_array = arr.map(function callback(currentValue[, index[, array]]) {
+// Return element for new_array
+// }[, thisArg])
+//map()方法为原数组中的每个元素都按照顺序调用一次callback函数，callback每次函数执行后的返回值（包括undefined）组合起来形成一个新的数组。
+//callback只会在有值的索引上被调用。因此null和undefined在显示表现为‘【空】’的原因有两种：1.没有值 2.没有索引
 // const numbers = [1,2,6,4,5];
 // // 在列表中需要加入key属性帮助react识别哪些元素发生了改变
 // //key只有放在就近的数组上下文中才有意义（放置在每个数组内元素对应的标签或者该标签的组件上）
@@ -187,24 +187,141 @@ import ReactDOM from "react-dom";
 
 //todo day3：组合
 //对于继承来说，文档建议用户使用单独的JS模块，组件间使用import直接引入
-function FancyBorder(props){
-    const color = props.color;
-    return (<div className={'FancyBorder FancyBorder-'+ color}>
-        {props.children}
-    </div>)
-}
-//可以使用{props.children}代替JSX创建的标签，用于JSX的标签嵌套（组合）中
-function WelcomeDialog(){
-    return (
-        <FancyBorder color="blue">
-            <h1 className="Dialog-title">
-                Welcome
-            </h1>
-            <p className="Dialog-message">
-                Thank you for visiting our spacecraft!
-            </p>
-        </FancyBorder>
-    )
-}
+// function FancyBorder(props){
+//     const color = props.color;
+//     return (<div className={'FancyBorder FancyBorder-'+ color}>
+//         {props.children}
+//     </div>)
+// }
+// //可以使用{props.children}代替JSX创建的标签，用于JSX的标签嵌套（组合）中
+// function WelcomeDialog(){
+//     return (
+//         <FancyBorder color="blue">
+//             <h1 className="Dialog-title">
+//                 Welcome
+//             </h1>
+//             <p className="Dialog-message">
+//                 Thank you for visiting our spacecraft!
+//             </p>
+//         </FancyBorder>
+//     )
+// }
 
-ReactDOM.render(<WelcomeDialog/>,document.getElementById('root'));
+// ReactDOM.render(<WelcomeDialog/>,document.getElementById('root'));
+
+//tododay4 受控组件与表单
+// class NameForm extends React.Component{
+//     constructor(props){
+//         super();
+//         this.state={value:""};
+
+//         this.handleChange = this.handleChange.bind(this);
+//         this.handleSubmit = this.handleSubmit.bind(this);
+//     }
+
+//     handleChange(event){
+//         this.setState({value: event.target.value});
+//     }
+
+//     handleSubmit(event){
+//         alert('提交的名字:'+this.state.value);
+//         event.preventDefault();
+//     }
+
+//     render(){
+//         return (
+//             <form onSubmit={this.handleSubmit}>
+//                 <label>
+//                     名字:
+//                     <input type="text" value={this.state.value} onChange={this.handleChange}/>
+
+//                 </label>
+//                 <input type="submit" value="提交"></input>
+//             </form>
+//         )
+//     }
+// }
+// class FlavorForm extends React.Component {
+//     constructor(props) {
+//       super(props);
+//       this.state = {value: "葡萄柚"};
+
+//       this.handleChange = this.handleChange.bind(this);
+//       this.handleSubmit = this.handleSubmit.bind(this);
+//     }
+
+//     handleChange(event) {
+//       this.setState({value: event.target.value});
+//     }
+
+//     handleSubmit(event) {
+//       alert('你喜欢的风味是: ' + this.state.value);
+//       event.preventDefault();
+//     }
+
+//     render() {
+//       return (
+//         <form onSubmit={this.handleSubmit}>
+//           <label>
+//             选择你喜欢的风味:
+//             <select value={this.state.value} onChange={this.handleChange}>
+//               {/* 如何能实现未选择为空？ */}
+//               <option value="葡萄柚">葡萄柚</option>
+//               <option value="酸橙">酸橙</option>
+//               <option value="椰子">椰子</option>
+//               <option value="芒果">芒果</option>
+//             </select>
+//           </label>
+//           <input type="submit" value="提交" />
+//         </form>
+//       );
+//     }
+//   }
+class Reservation extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isGoing: true,
+      numberOfGuests: 0,
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.name === "isGoing" ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+    });
+  }
+
+  render() {
+    return (
+      <form>
+        <label>
+          参与:
+          <input
+            name="isGoing"
+            type="checkbox"
+            checked={this.state.isGoing}
+            onChange={this.handleInputChange}
+          />
+        </label>
+        <br/>
+        <label>
+          来宾人数:
+          <input
+            name="numberOfGuests"
+            type="number"
+            value={this.state.numberOfGuests}
+            onChange={this.handleInputChange}
+          />
+        </label>
+      </form>
+    );
+  }
+}
+ReactDOM.render(<Reservation />, document.getElementById("root"));
